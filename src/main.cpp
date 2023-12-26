@@ -1,14 +1,12 @@
 #include <M5Unified.h>
-// #include <M5Stack.h>
-//#include <M5GFX.h>
 #include "M5_UNIT_8SERVO/M5_UNIT_8SERVO.h"
 
 M5GFX display;
 M5Canvas canvas(&display);
 M5_UNIT_8SERVO unit_8servo;
 
-uint8_t sda = 32;
-uint8_t scl = 33;
+uint8_t sda = 21;
+uint8_t scl = 22;
 
 /**
  * [POAT A]
@@ -28,29 +26,22 @@ uint8_t scl = 33;
 void setup() {
 
     auto cfg = M5.config(); // 設定用の構造体を代入。
-    // 設定したい項目を設定する。下記の2行はデフォルト設定を使う場合は省略してください。
-    cfg.serial_baudrate = 115200;
-    cfg.output_power = true;
     M5.begin(cfg); // 設定した値でデバイスを開始する。
-//    M5.begin(); // 設定した値でデバイスを開始する。
+
     display.begin();
     canvas.setColorDepth(1);  // mono color
     canvas.setFont(&fonts::efontCN_14);
     canvas.createSprite(display.width(), display.height());
     canvas.setPaletteColor(1, GREEN);
 
-//    while (!unit_8servo.begin(&Wire, 21, 22, M5_UNIT_8SERVO_DEFAULT_ADDR)) {
     while (!unit_8servo.begin(&Wire, sda, scl, M5_UNIT_8SERVO_DEFAULT_ADDR)) {
         Serial.println("extio Connect Error");
         M5.Lcd.print("extio Connect Error");
         delay(1000);
     }
-/*
-    Serial.println("UNIT_8SERVO Connected");
-    M5.Lcd.print("UNIT_8SERVO Connected");
-*/
 
     unit_8servo.setAllPinMode(SERVO_CTL_MODE);
+    // 8サーボユニットのその他のモード用のコード（本サンプルでは未使用）
     // unit_8servo.setAllPinMode(DIGITAL_INPUT_MODE);
     // unit_8servo.setAllPinMode(DIGITAL_OUTPUT_MODE);
     // unit_8servo.setAllPinMode(ADC_INPUT_MODE);
